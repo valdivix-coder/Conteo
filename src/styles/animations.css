@@ -1,0 +1,199 @@
+/* Only transform and opacity are animated. */
+
+.digit__glyph--roll {
+  animation: digit-roll 460ms var(--ease-out-expo) both;
+}
+
+.digit__glyph--fade {
+  animation: digit-fade 700ms var(--ease-out-quart) both;
+}
+
+@keyframes digit-roll {
+  from {
+    transform: translate3d(0, 58%, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes digit-fade {
+  from {
+    transform: translate3d(0, 10%, 0);
+    opacity: 0.2;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+.explorer__view--next {
+  animation: view-in-next 520ms var(--ease-out-expo) both;
+}
+
+.explorer__view--prev {
+  animation: view-in-prev 520ms var(--ease-out-expo) both;
+}
+
+@keyframes view-in-next {
+  from {
+    transform: translate3d(2.5rem, 0, 0);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes view-in-prev {
+  from {
+    transform: translate3d(-2.5rem, 0, 0);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.message__text {
+  animation: rise-in 1100ms var(--ease-out-expo) both;
+}
+
+.hero__intro,
+.counter,
+.destination {
+  animation: rise-in 1100ms var(--ease-out-expo) both;
+}
+
+.counter {
+  animation-delay: 120ms;
+}
+
+.destination {
+  animation-delay: 260ms;
+}
+
+@keyframes rise-in {
+  from {
+    transform: translate3d(0, 1.25rem, 0);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes beacon {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-freedom), transparent 40%);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 0.6rem color-mix(in oklab, var(--color-freedom), transparent 100%);
+  }
+}
+
+.milestone--live .milestone__number {
+  animation: milestone-expand 1600ms var(--ease-out-expo) both;
+}
+
+@keyframes milestone-expand {
+  from {
+    transform: scale(0.82);
+    opacity: 0;
+    letter-spacing: 0.02em;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes flash {
+  0% {
+    transform: translate3d(-50%, 0, 0) scale(0.3);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0) scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes ray {
+  0% {
+    transform: rotate(calc(var(--angle) + 90deg)) translate3d(0, 0, 0) scaleY(0.4);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(calc(var(--angle) + 90deg)) translate3d(0, calc(var(--distance) * -1), 0) scaleY(1);
+    opacity: 0;
+  }
+}
+
+@keyframes sun-rise {
+  from {
+    transform: translate3d(0, 30%, 0) scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* ─── Reduced motion: simple fades, no particles, no travel ────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .digit__glyph--roll,
+  .digit__glyph--fade,
+  .explorer__view--next,
+  .explorer__view--prev,
+  .message__text {
+    animation: fade-in 200ms linear both !important;
+  }
+
+  .celebration__ray {
+    display: none;
+  }
+
+  .final__rays {
+    animation: none !important;
+  }
+}
