@@ -528,13 +528,35 @@ button {
   font-weight: 400;
 }
 
+.pair-number--approx {
+  padding-inline: 0.44em;
+}
+
 .pair-number__approx {
-  display: inline-block;
-  margin-right: 0.12em;
+  position: absolute;
+  left: 0;
+  top: 50%;
   font-size: 0.5em;
   font-weight: 400;
+  line-height: 1;
   color: var(--color-text-muted);
-  align-self: center;
+  transform: translate3d(0, -50%, 0);
+}
+
+/* A number and the label beneath it form one block as wide as the figure;
+   the label is centred on the figure's middle axis. */
+.figure-stack {
+  display: inline-grid;
+  justify-items: center;
+  width: max-content;
+  max-width: 100%;
+}
+
+.figure-label {
+  --label-tracking: var(--tracking-label);
+  text-align: center;
+  /* Cancel trailing letter-spacing so the text is optically centred. */
+  margin-right: calc(var(--label-tracking, 0em) * -1);
 }
 
 /* ─── Journey progress ─────────────────────────────────────────────── */
@@ -921,8 +943,15 @@ button {
   color: var(--color-text-muted);
 }
 
-.conversion__number {
+.conversion__figure {
   margin-top: auto;
+}
+
+.conversion__unit {
+  --label-tracking: 0.06em;
+}
+
+.conversion__number {
   font-size: min(var(--text-conversion), calc(100cqi / var(--pair-em, 2.4)));
   font-weight: 600;
   line-height: 0.9;

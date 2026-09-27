@@ -166,9 +166,9 @@ export function TimeExplorer() {
         <div ref={stageRef} className="explorer__stage">
           <div key={view.id} className={`explorer__view explorer__view--${direction}`}>
             {lines.map((line, i) => (
-              <p key={i} className={`explorer__line${i > 0 ? " explorer__line--secondary" : ""}`}>
+              <p key={i} className={`figure-stack explorer__line${i > 0 ? " explorer__line--secondary" : ""}`}>
                 <PairNumber value={line.value} unit={line.unit} className="explorer__number" />
-                <span className="explorer__unit" aria-hidden="true">
+                <span className="figure-label explorer__unit" aria-hidden="true">
                   {line.unit}
                 </span>
               </p>

@@ -24,6 +24,11 @@ export function describeDay(dayKey: string): DateLabel {
   };
 }
 
+/** "La fuga arranca el lunes 28 de septiembre a las 08:00." */
+export function journeyStartBanner(): string {
+  return JOURNEY_START.setLocale(locale).toFormat("'La fuga arranca el' cccc d 'de' LLLL 'a las' HH:mm'.'");
+}
+
 /** "31 diciembre 2027" */
 export function targetLabel(): string {
   return TARGET.setLocale(locale).toFormat("d LLLL yyyy");

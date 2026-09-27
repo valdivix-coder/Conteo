@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { getNowMinute, getNowMs, getNowSecond, subscribe } from "../lib/clock";
-import { chileDayKey, remainingSeconds } from "../lib/time";
+import { JOURNEY_START, chileDayKey, remainingSeconds } from "../lib/time";
 
 let cachedSecond = Number.NaN;
 let cachedDayKey = "";
@@ -16,6 +16,15 @@ function getDayKey(): string {
 
 function getFinished(): boolean {
   return remainingSeconds(getNowMs()) === 0;
+}
+
+function getStarted(): boolean {
+  return getNowMs() >= JOURNEY_START.toMillis();
+}
+
+/** True once the journey has started. Re-renders the caller once. */
+export function useHasStarted(): boolean {
+  return useSyncExternalStore(subscribe, getStarted, getStarted);
 }
 
 /** Epoch second. Re-renders the caller once per second. */
