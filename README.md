@@ -51,7 +51,7 @@ export const APP_CONFIG = {
   personName: "Belén",
   timeZone: "America/Santiago",
   targetDate: "2027-12-31T00:00:00",       // hora de pared en timeZone
-  journeyStartDate: "2026-09-26T00:00:00", // inicio del progreso
+  journeyStartDate: "2026-09-28T08:00:00", // inicio del viaje (progreso 0 %)
   milestoneDays: [365, 300, /* … */ 1],
   …
 };

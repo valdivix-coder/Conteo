@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { computeConversions } from "./conversions";
-import { computeTotals, countCalendarDays, JOURNEY_START } from "./time";
+import { chileDateTime, computeTotals, countCalendarDays } from "./time";
+
+const FULL_JOURNEY_START = chileDateTime("2026-09-26T00:00:00").toMillis();
 
 const FULL_JOURNEY_SECONDS = 461 * 86_400;
 const calendar = { mondays: 66, weekends: 66, days: 461 };
@@ -52,13 +54,13 @@ describe("conversions", () => {
   });
 
   it("agrees with the time engine for the whole journey", () => {
-    const totals = computeTotals(JOURNEY_START.toMillis());
+    const totals = computeTotals(FULL_JOURNEY_START);
     const fromEngine = computeConversions(totals.totalSeconds, countCalendarDays("2026-09-26"));
     expect(fromEngine).toEqual(c);
   });
 
   it("derives weeks without cumulative rounding", () => {
-    const totals = computeTotals(JOURNEY_START.toMillis());
+    const totals = computeTotals(FULL_JOURNEY_START);
     expect(totals.weeks * 7 + totals.weekRemainderDays).toBe(totals.totalDays);
   });
 });

@@ -24,11 +24,11 @@ const ITEMS: readonly Item[] = [
   { id: "marsSols", unit: "soles marcianos", note: "Un día en Marte: 24 h 39 min 35 s.", approximate: 2 },
   { id: "heartbeatsMillions", unit: "millones de latidos", note: "Estimación a 70 latidos por minuto.", approximate: 2 },
   { id: "songs", unit: "canciones", note: "De tres minutos cada una. Elige bien.", approximate: 2 },
-  { id: "matiNaps", unit: "siestas de la Mati", note: "De dos horas cada una. Sin despertador.", approximate: 2 },
-  { id: "venegasEpisodes", unit: "capítulos de Los Venegas", note: "Media hora cada uno. Maratón garantizada.", approximate: 2 },
-  { id: "isiJokes", unit: "chistes de la Isi", note: "Cinco minutos cada uno, remate incluido.", approximate: 2 },
-  { id: "simonShowers", unit: "duchas de Simón", note: "Veinte minutos cada una. Agua caliente aparte.", approximate: 2 },
-  { id: "juCookies", unit: "galletas de la Ju", note: "Tres cuartos de hora cada una, del horno a la mesa.", approximate: 2 }
+  { id: "matiNaps", unit: "siestas de la Mati", note: "Sin despertador ni culpa. Una detrás de otra.", approximate: 2 },
+  { id: "venegasEpisodes", unit: "capítulos de Los Venegas", note: "Maratón garantizada. Nadie se levanta del sillón.", approximate: 2 },
+  { id: "isiJokes", unit: "chistes de la Isi", note: "Dicen que traen remate. Generalmente no lo traen.", approximate: 2 },
+  { id: "simonShowers", unit: "duchas de Simón", note: "Secarse cuenta por separado.", approximate: 2 },
+  { id: "juCookies", unit: "galletas de la Ju", note: "En su versión motivada. Del horno directo a la mesa.", approximate: 2 }
 ];
 
 interface FunConversionsProps {
@@ -117,9 +117,11 @@ export function FunConversions({ dayKey }: FunConversionsProps) {
           return (
             <li key={item.id} className="conversion">
               {item.lead && <span className="conversion__lead">{item.lead}</span>}
-              <PairNumber value={value} unit={item.unit} approximate={isApprox} className="conversion__number" />
-              <span className="conversion__unit" aria-hidden="true">
-                {item.unit}
+              <span className="figure-stack conversion__figure">
+                <PairNumber value={value} unit={item.unit} approximate={isApprox} className="conversion__number" />
+                <span className="figure-label conversion__unit" aria-hidden="true">
+                  {item.unit}
+                </span>
               </span>
               <span className="conversion__note">{item.note}</span>
             </li>

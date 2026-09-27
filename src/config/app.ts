@@ -6,7 +6,7 @@ export const APP_CONFIG = {
   /** Local wall-clock time in `timeZone`. */
   targetDate: "2027-12-31T00:00:00",
   /** Local wall-clock time in `timeZone`. Progress is measured from here. */
-  journeyStartDate: "2026-09-26T00:00:00",
+  journeyStartDate: "2026-09-28T08:00:00",
   /** Remaining calendar days that trigger a milestone moment. */
   milestoneDays: [365, 300, 250, 200, 150, 100, 75, 50, 30, 14, 7, 3, 2, 1],
   storageKey: "escape-de-babylon:celebrated-milestones"

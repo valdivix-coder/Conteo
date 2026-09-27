@@ -31,14 +31,14 @@ export function JourneyProgress() {
       </h2>
 
       <div className="journey__layout">
-        <p className="journey__percent">
+        <p className="figure-stack journey__percent">
           <span className="sr-only">{spokenPercent}</span>
           <span aria-hidden="true" className="journey__figure">
             <span className="journey__whole">{percent.whole}</span>
             <span className="journey__decimals">,{percent.decimals}</span>
             <span className="journey__sign">%</span>
           </span>
-          <span aria-hidden="true" className="journey__caption">
+          <span aria-hidden="true" className="figure-label journey__caption">
             del camino recorrido
           </span>
         </p>
@@ -64,7 +64,7 @@ export function JourneyProgress() {
           </svg>
           <figcaption className="arc__ends">
             <span>
-              <span className="arc__end-label">Salida</span>
+              <span className="arc__end-label">Inicio</span>
               {JOURNEY_START_COMPACT}
             </span>
             <span className="arc__end--target">

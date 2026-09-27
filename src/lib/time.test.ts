@@ -88,7 +88,7 @@ describe("countdown", () => {
 
 describe("totals", () => {
   it("counts days, hours, minutes and seconds from the journey start", () => {
-    const t = computeTotals(JOURNEY_START.toMillis());
+    const t = computeTotals(chile("2026-09-26T00:00:00"));
     // 26 Sep 2026 → 31 Dec 2027 = 461 calendar days.
     expect(t.totalDays).toBe(461);
     expect(t.weeks).toBe(65);
@@ -155,6 +155,22 @@ describe("calendar counts", () => {
     const { mondays, weekends } = countCalendarDays("2026-09-26");
     expect(mondays).toBe(66);
     expect(weekends).toBe(66);
+  });
+});
+
+describe("journey start", () => {
+  it("starts on Monday 28 September 2026 at 08:00 in Chile", () => {
+    expect(JOURNEY_START.toISO()).toBe("2026-09-28T08:00:00.000-03:00");
+    expect(JOURNEY_START.weekday).toBe(1);
+  });
+
+  it("leaves 15 months, 2 days and 16 hours at the start", () => {
+    expect(computeCountdown(JOURNEY_START.toMillis())).toMatchObject({ months: 15, days: 2, hours: 16, minutes: 0, seconds: 0 });
+  });
+
+  it("keeps progress at zero before the start", () => {
+    expect(journeyProgress(chile("2026-09-27T12:00:00"))).toBe(0);
+    expect(journeyProgress(JOURNEY_START.toMillis() + 3_600_000)).toBeGreaterThan(0);
   });
 });
 

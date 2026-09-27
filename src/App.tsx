@@ -7,7 +7,8 @@ import { FunConversions } from "./components/FunConversions";
 import { JourneyProgress } from "./components/JourneyProgress";
 import { MilestoneMoment } from "./components/MilestoneMoment";
 import { TimeExplorer } from "./components/TimeExplorer";
-import { useChileDayKey, useIsFinished } from "./hooks/useChileTime";
+import { useChileDayKey, useHasStarted, useIsFinished } from "./hooks/useChileTime";
+import { journeyStartBanner } from "./lib/dates";
 import { useDailyMessage } from "./hooks/useDailyMessage";
 import { useMilestones } from "./hooks/useMilestones";
 
@@ -18,6 +19,7 @@ import { useMilestones } from "./hooks/useMilestones";
 export function App() {
   const dayKey = useChileDayKey();
   const finished = useIsFinished();
+  const started = useHasStarted();
   const moment = useMilestones(dayKey, finished);
   const message = useDailyMessage(dayKey);
 
@@ -31,7 +33,7 @@ export function App() {
         <CurrentDate dayKey={dayKey} finished={finished} />
 
         <main>
-          {finished ? <FinalState /> : <CountdownHero banner={moment.banner} message={message} messageKey={dayKey} />}
+          {finished ? <FinalState /> : <CountdownHero banner={started ? moment.banner : journeyStartBanner()} message={message} messageKey={dayKey} />}
 
           {moment.milestone !== null && (
             <ErrorBoundary>

@@ -38,9 +38,11 @@ export function MilestoneMoment({ milestone, celebrate }: MilestoneMomentProps) 
       </p>
       <p className="milestone__figure">
         <span className="milestone__lead">Quedan</span>
-        <PairNumber value={milestone} unit={milestone === 1 ? "día" : "días"} className="milestone__number" />
-        <span className="milestone__unit" aria-hidden="true">
-          {milestone === 1 ? "día" : "días"}
+        <span className="figure-stack">
+          <PairNumber value={milestone} unit={milestone === 1 ? "día" : "días"} className="milestone__number" />
+          <span className="figure-label milestone__unit" aria-hidden="true">
+            {milestone === 1 ? "día" : "días"}
+          </span>
         </span>
       </p>
       {copy && (
