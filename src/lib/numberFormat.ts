@@ -1,6 +1,7 @@
 import { APP_CONFIG } from "../config/app";
 
-export const GROUP_SEPARATOR = "·";
+/** Chilean thousands separator: 39830400 → 39.830.400. */
+export const GROUP_SEPARATOR = ".";
 export const APPROXIMATE_SIGN = "≈";
 
 function toSafeInteger(value: number): number {
@@ -8,22 +9,32 @@ function toSafeInteger(value: number): number {
   return Math.floor(value);
 }
 
-/** 0 → "00", 9 → "09", 42 → "42". Values above 99 fall back to pair groups. */
+/** 0 → "00", 9 → "09", 42 → "42". Values above 99 use thousands grouping. */
 export function formatPair(value: number): string {
   const n = toSafeInteger(value);
-  return n > 99 ? formatPairGroups(n) : String(n).padStart(2, "0");
+  return n > 99 ? formatGrouped(n) : String(n).padStart(2, "0");
 }
 
-/** Splits an integer into pairs from the right: 11064 → ["01", "10", "64"]. */
-export function toPairGroups(value: number): string[] {
-  let digits = String(toSafeInteger(value));
-  if (digits.length % 2 === 1) digits = `0${digits}`;
-  return digits.match(/\d{2}/g) ?? ["00"];
+/**
+ * Display groups: below 100 a single two-digit block ("07"); from 100 on,
+ * natural thousands groups from the right: 11064 → ["11", "064"].
+ */
+export function toDisplayGroups(value: number): string[] {
+  const n = toSafeInteger(value);
+  if (n <= 99) return [String(n).padStart(2, "0")];
+  const groups: string[] = [];
+  let digits = String(n);
+  while (digits.length > 3) {
+    groups.unshift(digits.slice(-3));
+    digits = digits.slice(0, -3);
+  }
+  groups.unshift(digits);
+  return groups;
 }
 
-/** 461 → "04·61", 39830400 → "39·83·04·00". */
-export function formatPairGroups(value: number): string {
-  return toPairGroups(value).join(GROUP_SEPARATOR);
+/** 7 → "07", 461 → "461", 39830400 → "39.830.400". */
+export function formatGrouped(value: number): string {
+  return toDisplayGroups(value).join(GROUP_SEPARATOR);
 }
 
 /** Rounds to a number of significant digits: 221280 → 220000, 15.63 → 16. */
@@ -38,9 +49,9 @@ export function roundSignificant(value: number, significantDigits = 2): number {
 export interface Approximation {
   /** The rounded integer that is displayed. */
   value: number;
-  /** Visual form, e.g. "≈ 22·00·00". */
+  /** Visual form, e.g. "≈ 220.000". */
   display: string;
-  /** Visual digits without the sign, e.g. "22·00·00". */
+  /** Visual digits without the sign, e.g. "220.000". */
   digits: string;
 }
 
@@ -54,7 +65,7 @@ export function formatApproximate(
 ): Approximation {
   const { significantDigits = 2 } = options;
   const rounded = significantDigits === null ? Math.round(Math.max(0, value)) : roundSignificant(value, significantDigits);
-  const digits = formatPairGroups(rounded);
+  const digits = formatGrouped(rounded);
   return { value: rounded, digits, display: `${APPROXIMATE_SIGN} ${digits}` };
 }
 

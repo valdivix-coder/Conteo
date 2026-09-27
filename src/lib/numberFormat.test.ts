@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatApproximate, formatPair, formatPairGroups, formatPercent, roundSignificant, toPairGroups } from "./numberFormat";
+import { formatApproximate, formatPair, formatGrouped, formatPercent, roundSignificant, toDisplayGroups } from "./numberFormat";
 
 describe("formatPair", () => {
   it.each([
@@ -20,35 +20,42 @@ describe("formatPair", () => {
   });
 });
 
-describe("formatPairGroups", () => {
+describe("formatGrouped", () => {
   it.each([
     [0, "00"],
     [7, "07"],
     [99, "99"],
-    [100, "01·00"],
-    [461, "04·61"],
-    [11064, "01·10·64"],
-    [663840, "66·38·40"],
-    [39830400, "39·83·04·00"]
+    [100, "100"],
+    [461, "461"],
+    [1000, "1.000"],
+    [11064, "11.064"],
+    [663840, "663.840"],
+    [39830400, "39.830.400"]
   ])("%i → %s", (input, expected) => {
-    expect(formatPairGroups(input)).toBe(expected);
+    expect(formatGrouped(input)).toBe(expected);
+  });
+
+  it("never pads values of 100 or more", () => {
+    expect(formatGrouped(460)).not.toMatch(/^0/);
+    expect(formatPair(455)).toBe("455");
   });
 
   it("exposes the groups for rendering", () => {
-    expect(toPairGroups(11064)).toEqual(["01", "10", "64"]);
+    expect(toDisplayGroups(11064)).toEqual(["11", "064"]);
+    expect(toDisplayGroups(5)).toEqual(["05"]);
   });
 });
 
 describe("formatApproximate", () => {
   it("rounds to two significant digits by default", () => {
     expect(formatApproximate(15.631947)).toEqual({ value: 16, digits: "16", display: "≈ 16" });
-    expect(formatApproximate(221_280).display).toBe("≈ 22·00·00");
-    expect(formatApproximate(448.7).display).toBe("≈ 04·50");
+    expect(formatApproximate(221_280).display).toBe("≈ 220.000");
+    expect(formatApproximate(448.7).display).toBe("≈ 450");
     expect(formatApproximate(5.24).display).toBe("≈ 05");
   });
 
   it("can keep the whole integer", () => {
-    expect(formatApproximate(461, { significantDigits: null }).display).toBe("≈ 04·61");
+    expect(formatApproximate(461, { significantDigits: null }).display).toBe("≈ 461");
   });
 
   it("handles zero", () => {

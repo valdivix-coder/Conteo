@@ -27,6 +27,12 @@ npm run build      # typecheck + build de producción en dist/
 npm run preview    # sirve dist/ (incluye el service worker)
 ```
 
+## Números
+
+Valores bajo 100 se muestran siempre con dos dígitos (`07`, `15`). Desde 100 se usa la
+notación chilena con punto de miles (`460`, `22.000`, `39.830.400`), para que ninguna
+cifra se lea como si tuviera ceros de más. `≈` marca las equivalencias aproximadas.
+
 ## Configuración
 
 Todo lo crítico vive en [`src/config/app.ts`](src/config/app.ts):
@@ -67,7 +73,7 @@ src/
 ├── lib/                   lógica pura y testeada
 │   ├── time.ts            motor temporal (Luxon, America/Santiago)
 │   ├── clock.ts           fuente única de "ahora", sin drift
-│   ├── numberFormat.ts    formatPair · formatPairGroups · formatApproximate
+│   ├── numberFormat.ts    formatPair · formatGrouped · formatApproximate
 │   ├── conversions.ts     lunas, Mercurio, soles marcianos, latidos…
 │   ├── messages.ts        sistema editorial determinista (> 11 000 combinaciones)
 │   ├── milestones.ts      hitos, fases y persistencia defensiva
