@@ -16,6 +16,11 @@ export interface Conversions {
   /** Millions of heartbeats. */
   heartbeatsMillions: number;
   songs: number;
+  matiNaps: number;
+  venegasEpisodes: number;
+  isiJokes: number;
+  simonShowers: number;
+  juCookies: number;
 }
 
 /**
@@ -37,6 +42,11 @@ export function computeConversions(totalSeconds: number, calendar: CalendarCount
     mercuryYears: days / REF.mercuryYearDays,
     marsSols: seconds / REF.marsSolSeconds,
     heartbeatsMillions: (minutes * REF.heartbeatsPerMinute) / HEARTBEATS_UNIT,
-    songs: Math.floor(minutes / REF.songMinutes)
+    songs: Math.floor(minutes / REF.songMinutes),
+    matiNaps: Math.floor(minutes / REF.matiNapMinutes),
+    venegasEpisodes: Math.floor(minutes / REF.venegasEpisodeMinutes),
+    isiJokes: Math.floor(minutes / REF.isiJokeMinutes),
+    simonShowers: Math.floor(minutes / REF.simonShowerMinutes),
+    juCookies: Math.floor(minutes / REF.juCookieMinutes)
   };
 }

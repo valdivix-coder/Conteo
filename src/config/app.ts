@@ -20,5 +20,11 @@ export const CONVERSION_REFERENCES = {
   heartbeatsPerMinute: 70,
   songMinutes: 3,
   dogYearsPerHumanYear: 7,
-  gregorianYearDays: 365.2425
+  gregorianYearDays: 365.2425,
+  /** Family units, in minutes. */
+  matiNapMinutes: 120,
+  venegasEpisodeMinutes: 30,
+  isiJokeMinutes: 5,
+  simonShowerMinutes: 20,
+  juCookieMinutes: 45
 } as const;
