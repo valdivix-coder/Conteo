@@ -47,8 +47,8 @@ export function JourneyProgress() {
           <svg viewBox="0 0 400 214" className="arc__svg" focusable="false">
             <defs>
               <radialGradient id="sun-glow">
-                <stop offset="0%" stopColor="var(--color-freedom)" stopOpacity="0.55" />
-                <stop offset="100%" stopColor="var(--color-freedom)" stopOpacity="0" />
+                <stop offset="0%" stopColor="var(--color-sun)" stopOpacity="0.55" />
+                <stop offset="100%" stopColor="var(--color-sun)" stopOpacity="0" />
               </radialGradient>
             </defs>
             <path d={FULL_ARC} className="arc__track" pathLength={1} />

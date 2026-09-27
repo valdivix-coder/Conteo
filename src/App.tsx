@@ -1,7 +1,6 @@
 import { Atmosphere } from "./components/Atmosphere";
 import { CountdownHero } from "./components/CountdownHero";
 import { CurrentDate } from "./components/CurrentDate";
-import { DailyMessage } from "./components/DailyMessage";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { FinalState } from "./components/FinalState";
 import { FunConversions } from "./components/FunConversions";
@@ -9,6 +8,7 @@ import { JourneyProgress } from "./components/JourneyProgress";
 import { MilestoneMoment } from "./components/MilestoneMoment";
 import { TimeExplorer } from "./components/TimeExplorer";
 import { useChileDayKey, useIsFinished } from "./hooks/useChileTime";
+import { useDailyMessage } from "./hooks/useDailyMessage";
 import { useMilestones } from "./hooks/useMilestones";
 
 /**
@@ -19,6 +19,7 @@ export function App() {
   const dayKey = useChileDayKey();
   const finished = useIsFinished();
   const moment = useMilestones(dayKey, finished);
+  const message = useDailyMessage(dayKey);
 
   return (
     <>
@@ -30,7 +31,7 @@ export function App() {
         <CurrentDate dayKey={dayKey} finished={finished} />
 
         <main>
-          {finished ? <FinalState /> : <CountdownHero banner={moment.banner} />}
+          {finished ? <FinalState /> : <CountdownHero banner={moment.banner} message={message} messageKey={dayKey} />}
 
           {moment.milestone !== null && (
             <ErrorBoundary>
@@ -44,9 +45,6 @@ export function App() {
 
           {!finished && (
             <>
-              <ErrorBoundary>
-                <DailyMessage dayKey={dayKey} />
-              </ErrorBoundary>
               <ErrorBoundary>
                 <TimeExplorer />
               </ErrorBoundary>

@@ -60,8 +60,26 @@
   }
 }
 
-.message__text {
-  animation: rise-in 1100ms var(--ease-out-expo) both;
+.hero__message {
+  animation: rise-in 1100ms var(--ease-out-expo) 380ms both;
+}
+
+@keyframes twinkle {
+  from {
+    opacity: 0.15;
+  }
+  to {
+    opacity: 0.85;
+  }
+}
+
+@keyframes breathe {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.04);
+  }
 }
 
 .hero__intro,
@@ -185,8 +203,14 @@
   .digit__glyph--fade,
   .explorer__view--next,
   .explorer__view--prev,
-  .message__text {
+  .hero__message {
     animation: fade-in 200ms linear both !important;
+  }
+
+  .atmosphere__star,
+  .atmosphere__disc,
+  .atmosphere__rays {
+    animation: none !important;
   }
 
   .celebration__ray {

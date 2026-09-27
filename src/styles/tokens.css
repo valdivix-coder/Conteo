@@ -4,6 +4,8 @@
   --color-surface: #0d1b2a;
   --color-text: #f7f7f2;
   --color-freedom: #ffd65a;
+  /* The sun itself: decorative light that never changes, even in daylight. */
+  --color-sun: #ffd65a;
   --color-energy: #42e8d4;
   --color-atmosphere: #68cfff;
 
@@ -12,8 +14,12 @@
   --color-rule: rgb(247 247 242 / 0.14);
   --color-on-freedom: #07111f;
 
-  /* Driven from JS: journey progress in [0, 1] */
+  /* Driven from JS (Atmosphere): journey progress, dawn curve and sky colours */
   --progress: 0;
+  --dawn: 0;
+  --sky-top: #07111f;
+  --sky-middle: #0d1b2a;
+  --sky-horizon: #0f1d2c;
   --energy: 0;
 
   /* Type */
@@ -71,4 +77,16 @@
   --layer-atmosphere: 0;
   --layer-content: 1;
   --layer-celebration: 20;
+}
+
+/* Babylon is over: full daylight, dark ink, amber accents that stay readable. */
+:root[data-phase="free"] {
+  --color-babylon: #fff4d6;
+  --color-text: #1a1206;
+  --color-text-muted: rgb(26 18 6 / 0.72);
+  --color-text-faint: rgb(26 18 6 / 0.45);
+  --color-rule: rgb(26 18 6 / 0.16);
+  --color-freedom: #8a4500;
+  --color-on-freedom: #fff4d6;
+  color-scheme: light;
 }
