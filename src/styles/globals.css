@@ -454,7 +454,7 @@ button {
 
 .pair-number__sep {
   display: inline-block;
-  width: 0.36em;
+  width: 0.3em;
   text-align: center;
   color: var(--color-text-faint);
   font-weight: 400;
