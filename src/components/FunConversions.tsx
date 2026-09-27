@@ -23,7 +23,12 @@ const ITEMS: readonly Item[] = [
   { id: "mercuryYears", unit: "años de Mercurio", note: "Allá un año dura 88 días terrestres.", approximate: 2 },
   { id: "marsSols", unit: "soles marcianos", note: "Un día en Marte: 24 h 39 min 35 s.", approximate: 2 },
   { id: "heartbeatsMillions", unit: "millones de latidos", note: "Estimación a 70 latidos por minuto.", approximate: 2 },
-  { id: "songs", unit: "canciones", note: "De tres minutos cada una. Elige bien.", approximate: 2 }
+  { id: "songs", unit: "canciones", note: "De tres minutos cada una. Elige bien.", approximate: 2 },
+  { id: "matiNaps", unit: "siestas de la Mati", note: "De dos horas cada una. Sin despertador.", approximate: 2 },
+  { id: "venegasEpisodes", unit: "capítulos de Los Venegas", note: "Media hora cada uno. Maratón garantizada.", approximate: 2 },
+  { id: "isiJokes", unit: "chistes de la Isi", note: "Cinco minutos cada uno, remate incluido.", approximate: 2 },
+  { id: "simonShowers", unit: "duchas de Simón", note: "Veinte minutos cada una. Agua caliente aparte.", approximate: 2 },
+  { id: "juCookies", unit: "galletas de la Ju", note: "Tres cuartos de hora cada una, del horno a la mesa.", approximate: 2 }
 ];
 
 interface FunConversionsProps {

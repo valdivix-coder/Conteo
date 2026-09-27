@@ -31,6 +31,21 @@ describe("conversions", () => {
     expect(c.songs).toBe((461 * 1440) / 3);
   });
 
+  it("computes the family units from their durations", () => {
+    const minutes = 461 * 1440;
+    expect(c.matiNaps).toBe(minutes / 120);
+    expect(c.venegasEpisodes).toBe(minutes / 30);
+    expect(c.isiJokes).toBe(minutes / 5);
+    expect(c.simonShowers).toBe(minutes / 20);
+    expect(c.juCookies).toBe(Math.floor(minutes / 45));
+  });
+
+  it("counts only complete units", () => {
+    const partial = computeConversions(119 * 60, { mondays: 0, weekends: 0, days: 0 });
+    expect(partial.matiNaps).toBe(0);
+    expect(partial.juCookies).toBe(2);
+  });
+
   it("is zero, never negative, when time is up", () => {
     const zero = computeConversions(-50, { mondays: 0, weekends: 0, days: 0 });
     expect(Object.values(zero).every((v) => v === 0)).toBe(true);
