@@ -88,12 +88,14 @@ button {
 .atmosphere__sky {
   position: absolute;
   inset: 0;
+  /* Night → dawn: the top warms toward atmospheric blue, the horizon toward solar amber. */
   background: linear-gradient(
     180deg,
-    var(--color-babylon) 0%,
-    color-mix(in oklab, var(--color-babylon), var(--color-surface) 70%) 55%,
-    color-mix(in oklab, var(--color-surface), #3a3a3f calc(var(--progress) * 45%)) 100%
+    color-mix(in oklab, var(--color-babylon), #13294a calc(var(--progress) * 70%)) 0%,
+    color-mix(in oklab, var(--color-surface), #25406a calc(var(--progress) * 60%)) 50%,
+    color-mix(in oklab, var(--color-surface), #8a5a1e calc(var(--progress) * 75%)) 100%
   );
+  transition: background var(--duration-atmosphere) var(--ease-in-out-sine);
 }
 
 .atmosphere__glow {
@@ -110,8 +112,8 @@ button {
     transparent 72%
   );
   /* Horizon rises with progress; opacity grows with progress and final-phase energy. */
-  transform: translate3d(-50%, calc(62% - var(--progress) * 30% - var(--energy) * 6%), 0);
-  opacity: calc(0.28 + var(--progress) * 0.5 + var(--energy) * 0.14);
+  transform: translate3d(-50%, calc(62% - var(--progress) * 46% - var(--energy) * 6%), 0);
+  opacity: calc(0.3 + var(--progress) * 0.6 + var(--energy) * 0.1);
   transition:
     transform var(--duration-atmosphere) var(--ease-in-out-sine),
     opacity var(--duration-atmosphere) var(--ease-in-out-sine);
