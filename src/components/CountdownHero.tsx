@@ -37,9 +37,13 @@ function CounterUnit({ unit, value }: { unit: (typeof UNITS)[number]; value: num
 
 interface CountdownHeroProps {
   banner: string | null;
+  /** Today's line, woven into the hero rather than presented as a quote. */
+  message: string;
+  /** Changes with the Chilean date so the line re-enters each day. */
+  messageKey: string;
 }
 
-export function CountdownHero({ banner }: CountdownHeroProps) {
+export function CountdownHero({ banner, message, messageKey }: CountdownHeroProps) {
   const countdown = useCountdown();
 
   return (
@@ -69,6 +73,10 @@ export function CountdownHero({ banner }: CountdownHeroProps) {
           </div>
         </div>
       </div>
+
+      <p key={messageKey} className="hero__message">
+        {message}
+      </p>
 
       <div className="destination">
         <span className="destination__rule" aria-hidden="true" />

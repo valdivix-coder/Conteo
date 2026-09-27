@@ -79,3 +79,15 @@ describe("daily message", () => {
     }
   });
 });
+
+describe("direct address", () => {
+  const SECOND_PERSON = /Belén|(?<!\p{L})(tú|tu|tus|te|ti|tuyo|tuya|contigo|respira|imagina|sonríe|aguanta|di)(?!\p{L})/iu;
+
+  it("always talks to Belén, by name or in second person", () => {
+    let day = DateTime.fromISO("2026-09-26", { zone: "utc" });
+    while (day.toISODate()! <= "2027-12-31") {
+      expect(messageForDay(day.toISODate()!)).toMatch(SECOND_PERSON);
+      day = day.plus({ days: 1 });
+    }
+  });
+});

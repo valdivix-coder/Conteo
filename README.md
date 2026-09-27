@@ -33,6 +33,15 @@ Valores bajo 100 se muestran siempre con dos dígitos (`07`, `15`). Desde 100 se
 notación chilena con punto de miles (`460`, `22.000`, `39.830.400`), para que ninguna
 cifra se lea como si tuviera ceros de más. `≈` marca las equivalencias aproximadas.
 
+## Amanecer
+
+`src/lib/dawn.ts` define la curva noche → hora azul → alba → brasa → sol, que el
+progreso del viaje recorre (ligeramente adelantada para que el cambio se note desde
+las primeras semanas). Las estrellas se apagan, el sol asoma y sus rayos giran
+lento a medida que avanza. Hasta el último día el texto blanco mantiene contraste
+AA (tests en `dawn.test.ts`); al llegar la fecha la interfaz pasa a plena luz con
+texto oscuro.
+
 ## Configuración
 
 Todo lo crítico vive en [`src/config/app.ts`](src/config/app.ts):
@@ -75,7 +84,8 @@ src/
 │   ├── clock.ts           fuente única de "ahora", sin drift
 │   ├── numberFormat.ts    formatPair · formatGrouped · formatApproximate
 │   ├── conversions.ts     lunas, Mercurio, soles marcianos, latidos…
-│   ├── messages.ts        sistema editorial determinista (> 11 000 combinaciones)
+│   ├── messages.ts        mensajes diarios deterministas, siempre dirigidos a Belén
+│   ├── dawn.ts            curva de color del amanecer
 │   ├── milestones.ts      hitos, fases y persistencia defensiva
 │   └── dates.ts           etiquetas de fecha en español
 ├── hooks/                 suscripciones por segundo / minuto / día
