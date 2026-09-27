@@ -1,0 +1,74 @@
+:root {
+  /* Palette */
+  --color-babylon: #07111f;
+  --color-surface: #0d1b2a;
+  --color-text: #f7f7f2;
+  --color-freedom: #ffd65a;
+  --color-energy: #42e8d4;
+  --color-atmosphere: #68cfff;
+
+  --color-text-muted: rgb(247 247 242 / 0.66);
+  --color-text-faint: rgb(247 247 242 / 0.4);
+  --color-rule: rgb(247 247 242 / 0.14);
+  --color-on-freedom: #07111f;
+
+  /* Driven from JS: journey progress in [0, 1] */
+  --progress: 0;
+  --energy: 0;
+
+  /* Type */
+  --font-sans: "Space Grotesk Variable", "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  --text-lg: clamp(1.25rem, 1.05rem + 1vw, 1.75rem);
+  --text-message: clamp(1.6rem, 1.1rem + 2.6vw, 3.1rem);
+  --text-title: clamp(2.35rem, 1.2rem + 6.4vw, 5.75rem);
+  --text-count-xl: clamp(5.25rem, 0.6rem + 26vw, 12.5rem);
+  --text-count-lg: clamp(3.4rem, 1.2rem + 12vw, 7rem);
+  --text-count-row: clamp(4.5rem, 0.5rem + 8.6vw, 10rem);
+  --text-display: clamp(4.5rem, 1rem + 19vw, 10rem);
+  --text-conversion: clamp(3.5rem, 2rem + 8vw, 7rem);
+
+  --tracking-label: 0.18em;
+  --tracking-tight: -0.045em;
+
+  /* Space */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: clamp(4rem, 3rem + 5vw, 7.5rem);
+  --gutter: clamp(1rem, 0.5rem + 3vw, 3.5rem);
+  --content-max: 76rem;
+
+  /* Safe areas */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+
+  /* Shape */
+  --radius-pill: 999px;
+  --radius-sm: 0.375rem;
+  --hairline: 1px;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
+  --duration-press: 120ms;
+  --duration-fast: 220ms;
+  --duration-base: 420ms;
+  --duration-slow: 900ms;
+  --duration-atmosphere: 2400ms;
+
+  /* Layers */
+  --layer-atmosphere: 0;
+  --layer-content: 1;
+  --layer-celebration: 20;
+}
