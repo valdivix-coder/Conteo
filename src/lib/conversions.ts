@@ -3,7 +3,6 @@ import type { CalendarCounts } from "./time";
 
 const SECONDS_PER_DAY = 86_400;
 const SECONDS_PER_MINUTE = 60;
-const HEARTBEATS_UNIT = 1_000_000;
 
 export interface Conversions {
   mondays: number;
@@ -13,8 +12,7 @@ export interface Conversions {
   dogYears: number;
   mercuryYears: number;
   marsSols: number;
-  /** Millions of heartbeats. */
-  heartbeatsMillions: number;
+  heartbeats: number;
   songs: number;
   matiNaps: number;
   venegasEpisodes: number;
@@ -22,6 +20,21 @@ export interface Conversions {
   simonShowers: number;
   juCookies: number;
 }
+
+/** Length in seconds of one unit of each continuous equivalence. */
+export const UNIT_SECONDS = {
+  moons: REF.synodicMonthDays * SECONDS_PER_DAY,
+  dogYears: (REF.gregorianYearDays * SECONDS_PER_DAY) / REF.dogYearsPerHumanYear,
+  mercuryYears: REF.mercuryYearDays * SECONDS_PER_DAY,
+  marsSols: REF.marsSolSeconds,
+  heartbeats: SECONDS_PER_MINUTE / REF.heartbeatsPerMinute,
+  songs: REF.songMinutes * SECONDS_PER_MINUTE,
+  matiNaps: REF.matiNapMinutes * SECONDS_PER_MINUTE,
+  venegasEpisodes: REF.venegasEpisodeMinutes * SECONDS_PER_MINUTE,
+  isiJokes: REF.isiJokeMinutes * SECONDS_PER_MINUTE,
+  simonShowers: REF.simonShowerMinutes * SECONDS_PER_MINUTE,
+  juCookies: REF.juCookieMinutes * SECONDS_PER_MINUTE
+} as const;
 
 /**
  * Raw (unrounded) equivalences. Every value is derived directly from the
@@ -41,12 +54,12 @@ export function computeConversions(totalSeconds: number, calendar: CalendarCount
     dogYears: years * REF.dogYearsPerHumanYear,
     mercuryYears: days / REF.mercuryYearDays,
     marsSols: seconds / REF.marsSolSeconds,
-    heartbeatsMillions: (minutes * REF.heartbeatsPerMinute) / HEARTBEATS_UNIT,
-    songs: Math.floor(minutes / REF.songMinutes),
-    matiNaps: Math.floor(minutes / REF.matiNapMinutes),
-    venegasEpisodes: Math.floor(minutes / REF.venegasEpisodeMinutes),
-    isiJokes: Math.floor(minutes / REF.isiJokeMinutes),
-    simonShowers: Math.floor(minutes / REF.simonShowerMinutes),
-    juCookies: Math.floor(minutes / REF.juCookieMinutes)
+    heartbeats: minutes * REF.heartbeatsPerMinute,
+    songs: minutes / REF.songMinutes,
+    matiNaps: minutes / REF.matiNapMinutes,
+    venegasEpisodes: minutes / REF.venegasEpisodeMinutes,
+    isiJokes: minutes / REF.isiJokeMinutes,
+    simonShowers: minutes / REF.simonShowerMinutes,
+    juCookies: minutes / REF.juCookieMinutes
   };
 }

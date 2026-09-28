@@ -1,17 +1,20 @@
 import type { CSSProperties } from "react";
-import { toDisplayGroups, formatSpoken, APPROXIMATE_SIGN, GROUP_SEPARATOR } from "../lib/numberFormat";
+import { toDisplayGroups, formatSpoken, APPROXIMATE_SIGN, DECIMAL_SEPARATOR, GROUP_SEPARATOR } from "../lib/numberFormat";
 
 // Approximate advance widths in em (tabular digit incl. tight tracking, separator, ≈ sign).
 // The ≈ sign sits in symmetric side padding so labels centre on the digits, not the sign.
 const DIGIT_EM = 0.6;
 const SEPARATOR_EM = 0.3;
 const APPROX_EM = 0.44;
+const FRACTION_SCALE = 0.42;
 
 interface PairNumberProps {
   value: number;
   /** Accessible unit, e.g. "días". */
   unit: string;
   approximate?: boolean;
+  /** Fraction digits shown small after the integer, e.g. "4921837". */
+  fraction?: string;
   className?: string;
 }
 
@@ -20,10 +23,11 @@ interface PairNumberProps {
  * assistive technology. Separators are dimmed so the figure reads as one number. `--pair-em`
  * exposes the figure's width in em so CSS can fit it to its container.
  */
-export function PairNumber({ value, unit, approximate = false, className }: PairNumberProps) {
+export function PairNumber({ value, unit, approximate = false, fraction = "", className }: PairNumberProps) {
   const groups = toDisplayGroups(value);
   const widthEm =
-    groups.join("").length * DIGIT_EM + (groups.length - 1) * SEPARATOR_EM + (approximate ? APPROX_EM * 2 : 0);
+    groups.join("").length * DIGIT_EM + (groups.length - 1) * SEPARATOR_EM + (approximate ? APPROX_EM * 2 : 0) +
+    (fraction ? (fraction.length + 1) * DIGIT_EM * FRACTION_SCALE : 0);
   const spoken = `${approximate ? "aproximadamente " : ""}${formatSpoken(value)} ${unit}`;
 
   return (
@@ -40,6 +44,12 @@ export function PairNumber({ value, unit, approximate = false, className }: Pair
             {group}
           </span>
         ))}
+        {fraction && (
+          <span className="pair-number__fraction">
+            {DECIMAL_SEPARATOR}
+            {fraction}
+          </span>
+        )}
       </span>
     </span>
   );

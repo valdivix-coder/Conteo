@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { computeConversions } from "./conversions";
+import { UNIT_SECONDS, computeConversions } from "./conversions";
+import { liveDecimals, splitFixed } from "./numberFormat";
 import { chileDateTime, computeTotals, countCalendarDays } from "./time";
 
 const FULL_JOURNEY_START = chileDateTime("2026-09-26T00:00:00").toMillis();
@@ -29,7 +30,7 @@ describe("conversions", () => {
 
   it("computes dog years, heartbeats and songs", () => {
     expect(c.dogYears).toBeCloseTo((461 / 365.2425) * 7, 10);
-    expect(c.heartbeatsMillions).toBeCloseTo((461 * 1440 * 70) / 1e6, 10);
+    expect(c.heartbeats).toBe(461 * 1440 * 70);
     expect(c.songs).toBe((461 * 1440) / 3);
   });
 
@@ -39,13 +40,27 @@ describe("conversions", () => {
     expect(c.venegasEpisodes).toBe(minutes / 30);
     expect(c.isiJokes).toBe(minutes / 5);
     expect(c.simonShowers).toBe(minutes / 20);
-    expect(c.juCookies).toBe(Math.floor(minutes / 45));
+    expect(c.juCookies).toBeCloseTo(minutes / 45, 10);
   });
 
-  it("counts only complete units", () => {
-    const partial = computeConversions(119 * 60, { mondays: 0, weekends: 0, days: 0 });
-    expect(partial.matiNaps).toBe(0);
-    expect(partial.juCookies).toBe(2);
+  it("keeps the fraction of the unit in progress", () => {
+    const partial = computeConversions(90 * 60, { mondays: 0, weekends: 0, days: 0 });
+    expect(partial.matiNaps).toBeCloseTo(0.75, 10);
+    expect(partial.juCookies).toBeCloseTo(2, 10);
+  });
+
+  it("changes every second for every continuous unit", () => {
+    const now = computeConversions(FULL_JOURNEY_SECONDS, calendar);
+    const next = computeConversions(FULL_JOURNEY_SECONDS - 1, calendar);
+    for (const id of Object.keys(UNIT_SECONDS) as (keyof typeof UNIT_SECONDS)[]) {
+      const decimals = liveDecimals(UNIT_SECONDS[id]);
+      const a = splitFixed(now[id], decimals);
+      const b = splitFixed(next[id], decimals);
+      // Over a few seconds the visible digits must move (the last digit ticks ~1/s).
+      const later = splitFixed(computeConversions(FULL_JOURNEY_SECONDS - 3, calendar)[id], decimals);
+      expect(`${later.integer},${later.fraction}`).not.toBe(`${a.integer},${a.fraction}`);
+      expect(`${b.integer},${b.fraction}` <= `${a.integer},${a.fraction}` || b.integer < a.integer).toBe(true);
+    }
   });
 
   it("is zero, never negative, when time is up", () => {
