@@ -959,6 +959,30 @@ button {
   --label-tracking: 0.06em;
 }
 
+/* Drains steadily until the last digit steps down by one, then refills. */
+.conversion__step {
+  justify-self: stretch;
+  height: 2px;
+  margin-block: var(--space-1) var(--space-1);
+  border-radius: 2px;
+  background: var(--color-rule);
+  overflow: hidden;
+}
+
+.conversion__step::before {
+  content: "";
+  display: block;
+  height: 100%;
+  background: var(--color-sun);
+  transform: scaleX(var(--step, 0));
+  transform-origin: left center;
+  transition: transform 1s linear;
+}
+
+.conversion__step--refill::before {
+  transition: none;
+}
+
 .conversion__number {
   font-size: min(var(--text-conversion), calc(100cqi / var(--pair-em, 2.4)));
   font-weight: 600;

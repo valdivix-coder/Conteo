@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatApproximate, liveDecimals, splitFixed, formatPair, formatGrouped, formatPercent, roundSignificant, toDisplayGroups } from "./numberFormat";
+import { formatApproximate, splitFixed, stepDecimals, formatPair, formatGrouped, formatPercent, roundSignificant, toDisplayGroups } from "./numberFormat";
 
 describe("formatPair", () => {
   it.each([
@@ -72,11 +72,14 @@ describe("live decimals", () => {
     expect(splitFixed(42.9, 0)).toEqual({ integer: 42, fraction: "" });
   });
 
-  it("picks decimals so the last digit moves about once per second", () => {
-    expect(liveDecimals(0.857)).toBe(0); // heartbeat
-    expect(liveDecimals(180)).toBe(3); // song
-    expect(liveDecimals(7200)).toBe(4); // nap
-    expect(liveDecimals(29.53059 * 86400)).toBe(7); // moon
+  it("uses up to two decimals while each step lasts at least one refresh", () => {
+    expect(stepDecimals(0.857, 0.2)).toBe(0); // heartbeat, fast refresh
+    expect(stepDecimals(180)).toBe(2); // song: a step every 1.8 s
+    expect(stepDecimals(300)).toBe(2); // joke: every 3 s
+    expect(stepDecimals(7200)).toBe(2); // nap: every 72 s
+    expect(stepDecimals(29.53059 * 86400)).toBe(2); // moon: capped at two
+    expect(stepDecimals(5)).toBe(0);
+    expect(stepDecimals(10)).toBe(1);
   });
 });
 

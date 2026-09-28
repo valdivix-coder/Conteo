@@ -84,6 +84,11 @@ export function subscribe(listener: Listener): () => void {
   };
 }
 
+/** Millisecond-precise "now" (simulation offset included) for sub-second animations. */
+export function readLiveMs(): number {
+  return readNow();
+}
+
 export function getNowMs(): number {
   return currentMs;
 }
