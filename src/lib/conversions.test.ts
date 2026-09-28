@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { UNIT_SECONDS, computeConversions } from "./conversions";
-import { stepDecimals } from "./numberFormat";
+import { computeConversions, heartbeatsIn } from "./conversions";
 import { chileDateTime, computeTotals, countCalendarDays } from "./time";
 
 const FULL_JOURNEY_START = chileDateTime("2026-09-26T00:00:00").toMillis();
@@ -17,19 +16,18 @@ describe("conversions", () => {
     expect(c.sunrises).toBe(461);
   });
 
-  it("computes moons with the synodic month", () => {
-    expect(c.moons).toBeCloseTo(461 / 29.53059, 10);
-    expect(Math.round(c.moons)).toBe(16);
+  it("returns whole units only, never decimals", () => {
+    for (const value of Object.values(c)) expect(Number.isInteger(value)).toBe(true);
   });
 
-  it("computes Mercury years and Martian sols", () => {
-    expect(c.mercuryYears).toBeCloseTo(461 / 87.969, 10);
-    expect(c.marsSols).toBeCloseTo(FULL_JOURNEY_SECONDS / 88_775, 10);
-    expect(Math.floor(c.marsSols)).toBe(448);
+  it("computes moons, Mercury years, Martian sols and dog years", () => {
+    expect(c.moons).toBe(Math.floor(461 / 29.53059));
+    expect(c.mercuryYears).toBe(Math.floor(461 / 87.969));
+    expect(c.marsSols).toBe(448);
+    expect(c.dogYears).toBe(Math.floor((461 / 365.2425) * 7));
   });
 
-  it("computes dog years, heartbeats and songs", () => {
-    expect(c.dogYears).toBeCloseTo((461 / 365.2425) * 7, 10);
+  it("computes heartbeats and songs", () => {
     expect(c.heartbeats).toBe(461 * 1440 * 70);
     expect(c.songs).toBe((461 * 1440) / 3);
   });
@@ -40,29 +38,30 @@ describe("conversions", () => {
     expect(c.venegasEpisodes).toBe(minutes / 30);
     expect(c.isiJokes).toBe(minutes / 5);
     expect(c.simonShowers).toBe(minutes / 20);
-    expect(c.juCookies).toBeCloseTo(minutes / 45, 10);
+    expect(c.juCookies).toBe(Math.floor(minutes / 45));
   });
 
-  it("keeps the fraction of the unit in progress", () => {
-    const partial = computeConversions(90 * 60, { mondays: 0, weekends: 0, days: 0 });
-    expect(partial.matiNaps).toBeCloseTo(0.75, 10);
-    expect(partial.juCookies).toBeCloseTo(2, 10);
+  it("counts only complete units", () => {
+    const partial = computeConversions(119 * 60, { mondays: 0, weekends: 0, days: 0 });
+    expect(partial.matiNaps).toBe(0);
+    expect(partial.juCookies).toBe(2);
   });
 
-  it("steps the last digit by exactly one, never skipping, with at most two decimals", () => {
-    for (const id of Object.keys(UNIT_SECONDS) as (keyof typeof UNIT_SECONDS)[]) {
-      const unit = UNIT_SECONDS[id];
-      const refresh = unit < 1 ? 0.2 : 1;
-      const decimals = stepDecimals(unit, refresh);
-      expect(decimals).toBeLessThanOrEqual(2);
-      const scale = 10 ** decimals;
-      let previous = Math.floor((FULL_JOURNEY_SECONDS / unit) * scale);
-      for (let t = refresh; t < 600; t += refresh) {
-        const current = Math.floor(((FULL_JOURNEY_SECONDS - t) / unit) * scale + 1e-9);
-        expect(previous - current).toBeLessThanOrEqual(1);
-        expect(previous - current).toBeGreaterThanOrEqual(0);
-        previous = current;
-      }
+  it("changes only when a whole unit elapses", () => {
+    const nap = 7200;
+    const start = computeConversions(10 * nap, calendar).matiNaps;
+    expect(computeConversions(10 * nap - 1, calendar).matiNaps).toBe(start - 1);
+    expect(computeConversions(10 * nap - 7199, calendar).matiNaps).toBe(start - 1);
+    expect(computeConversions(10 * nap - 7200, calendar).matiNaps).toBe(start - 1);
+    expect(computeConversions(10 * nap - 7201, calendar).matiNaps).toBe(start - 2);
+  });
+
+  it("counts heartbeats down one at a time", () => {
+    let previous = heartbeatsIn(1000);
+    for (let t = 1000; t > 990; t -= 0.2) {
+      const current = heartbeatsIn(t);
+      expect(previous - current).toBeLessThanOrEqual(1);
+      previous = current;
     }
   });
 

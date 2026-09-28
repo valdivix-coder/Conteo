@@ -528,14 +528,6 @@ button {
   font-weight: 400;
 }
 
-.pair-number__fraction {
-  align-self: baseline;
-  font-size: 0.42em;
-  font-weight: 500;
-  letter-spacing: 0;
-  color: var(--color-text-muted);
-}
-
 .pair-number--approx {
   padding-inline: 0.44em;
 }
@@ -957,30 +949,6 @@ button {
 
 .conversion__unit {
   --label-tracking: 0.06em;
-}
-
-/* Drains steadily until the last digit steps down by one, then refills. */
-.conversion__step {
-  justify-self: stretch;
-  height: 2px;
-  margin-block: var(--space-1) var(--space-1);
-  border-radius: 2px;
-  background: var(--color-rule);
-  overflow: hidden;
-}
-
-.conversion__step::before {
-  content: "";
-  display: block;
-  height: 100%;
-  background: var(--color-sun);
-  transform: scaleX(var(--step, 0));
-  transform-origin: left center;
-  transition: transform 1s linear;
-}
-
-.conversion__step--refill::before {
-  transition: none;
 }
 
 .conversion__number {
