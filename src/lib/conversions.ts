@@ -21,24 +21,15 @@ export interface Conversions {
   juCookies: number;
 }
 
-/** Length in seconds of one unit of each continuous equivalence. */
-export const UNIT_SECONDS = {
-  moons: REF.synodicMonthDays * SECONDS_PER_DAY,
-  dogYears: (REF.gregorianYearDays * SECONDS_PER_DAY) / REF.dogYearsPerHumanYear,
-  mercuryYears: REF.mercuryYearDays * SECONDS_PER_DAY,
-  marsSols: REF.marsSolSeconds,
-  heartbeats: SECONDS_PER_MINUTE / REF.heartbeatsPerMinute,
-  songs: REF.songMinutes * SECONDS_PER_MINUTE,
-  matiNaps: REF.matiNapMinutes * SECONDS_PER_MINUTE,
-  venegasEpisodes: REF.venegasEpisodeMinutes * SECONDS_PER_MINUTE,
-  isiJokes: REF.isiJokeMinutes * SECONDS_PER_MINUTE,
-  simonShowers: REF.simonShowerMinutes * SECONDS_PER_MINUTE,
-  juCookies: REF.juCookieMinutes * SECONDS_PER_MINUTE
-} as const;
+/** Whole heartbeats in a span of seconds, at the reference rate. */
+export function heartbeatsIn(seconds: number): number {
+  return Math.floor((Math.max(0, seconds) / SECONDS_PER_MINUTE) * REF.heartbeatsPerMinute);
+}
 
 /**
- * Raw (unrounded) equivalences. Every value is derived directly from the
- * exact remaining seconds, never from another rounded value.
+ * Whole units still ahead (complete units only, no decimals). Every value is
+ * derived directly from the exact remaining seconds, never from another
+ * rounded value, so a figure only changes when a whole unit elapses.
  */
 export function computeConversions(totalSeconds: number, calendar: CalendarCounts): Conversions {
   const seconds = Math.max(0, totalSeconds);
@@ -50,16 +41,16 @@ export function computeConversions(totalSeconds: number, calendar: CalendarCount
     mondays: calendar.mondays,
     weekends: calendar.weekends,
     sunrises: calendar.days,
-    moons: days / REF.synodicMonthDays,
-    dogYears: years * REF.dogYearsPerHumanYear,
-    mercuryYears: days / REF.mercuryYearDays,
-    marsSols: seconds / REF.marsSolSeconds,
-    heartbeats: minutes * REF.heartbeatsPerMinute,
-    songs: minutes / REF.songMinutes,
-    matiNaps: minutes / REF.matiNapMinutes,
-    venegasEpisodes: minutes / REF.venegasEpisodeMinutes,
-    isiJokes: minutes / REF.isiJokeMinutes,
-    simonShowers: minutes / REF.simonShowerMinutes,
-    juCookies: minutes / REF.juCookieMinutes
+    moons: Math.floor(days / REF.synodicMonthDays),
+    dogYears: Math.floor(years * REF.dogYearsPerHumanYear),
+    mercuryYears: Math.floor(days / REF.mercuryYearDays),
+    marsSols: Math.floor(seconds / REF.marsSolSeconds),
+    heartbeats: heartbeatsIn(seconds),
+    songs: Math.floor(minutes / REF.songMinutes),
+    matiNaps: Math.floor(minutes / REF.matiNapMinutes),
+    venegasEpisodes: Math.floor(minutes / REF.venegasEpisodeMinutes),
+    isiJokes: Math.floor(minutes / REF.isiJokeMinutes),
+    simonShowers: Math.floor(minutes / REF.simonShowerMinutes),
+    juCookies: Math.floor(minutes / REF.juCookieMinutes)
   };
 }

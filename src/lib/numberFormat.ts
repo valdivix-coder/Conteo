@@ -37,37 +37,6 @@ export function formatGrouped(value: number): string {
   return toDisplayGroups(value).join(GROUP_SEPARATOR);
 }
 
-export const DECIMAL_SEPARATOR = ",";
-
-/**
- * Truncates (never rounds up) to a fixed number of decimals, so a value that
- * is counting down never appears to jump back up: 15.49218379 → { 15, "4921837" }.
- */
-export function splitFixed(value: number, decimals: number): { integer: number; fraction: string } {
-  const safe = Number.isFinite(value) && value > 0 ? value : 0;
-  if (decimals <= 0) return { integer: Math.floor(safe), fraction: "" };
-  const scale = 10 ** decimals;
-  const scaled = Math.floor(safe * scale + 1e-9);
-  return {
-    integer: Math.floor(scaled / scale),
-    fraction: String(scaled % scale).padStart(decimals, "0")
-  };
-}
-
-export const MAX_LIVE_DECIMALS = 2;
-
-/**
- * Decimals for a live countdown of a unit lasting `unitSeconds`, refreshed
- * every `refreshSeconds`: as many as possible (up to two) while each step of
- * the last digit still lasts at least one refresh, so the last digit always
- * moves by exactly one and never skips.
- */
-export function stepDecimals(unitSeconds: number, refreshSeconds = 1, max = MAX_LIVE_DECIMALS): number {
-  if (!(unitSeconds > 0) || !(refreshSeconds > 0)) return 0;
-  const fits = Math.floor(Math.log10(unitSeconds / refreshSeconds) + 1e-9);
-  return Math.min(max, Math.max(0, fits));
-}
-
 /** Rounds to a number of significant digits: 221280 → 220000, 15.63 → 16. */
 export function roundSignificant(value: number, significantDigits = 2): number {
   const n = Math.max(0, value);

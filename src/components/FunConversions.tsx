@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNowSecond } from "../hooks/useChileTime";
-import { UNIT_SECONDS, computeConversions, type Conversions } from "../lib/conversions";
+import { computeConversions, type Conversions } from "../lib/conversions";
 import { formatPair } from "../lib/numberFormat";
 import { countCalendarDays, remainingSeconds } from "../lib/time";
-import { LiveMeasure } from "./LiveMeasure";
+import { LiveHeartbeats } from "./LiveHeartbeats";
 import { PairNumber } from "./PairNumber";
 
 interface Item {
@@ -32,18 +32,16 @@ const ITEMS: readonly Item[] = [
   { id: "juCookies", unit: "galletas de la Ju", note: "En su versión motivada. Del horno directo a la mesa." }
 ];
 
-const isContinuous = (id: keyof Conversions): id is keyof typeof UNIT_SECONDS => id in UNIT_SECONDS;
-
 interface FunConversionsProps {
   dayKey: string;
 }
 
 export function FunConversions({ dayKey }: FunConversionsProps) {
-  // Recomputed from the exact remaining seconds on every tick: real time, no drift.
+  // Whole units from the exact remaining time, checked every second: a figure
+  // changes the moment a whole unit elapses and otherwise stays put.
   const second = useNowSecond();
-  const remaining = remainingSeconds(second * 1000);
   const calendar = useMemo(() => countCalendarDays(dayKey), [dayKey]);
-  const conversions = computeConversions(remaining, calendar);
+  const conversions = computeConversions(remainingSeconds(second * 1000), calendar);
 
   const trackRef = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
@@ -117,13 +115,8 @@ export function FunConversions({ dayKey }: FunConversionsProps) {
             <li key={item.id} className="conversion">
               {item.lead && <span className="conversion__lead">{item.lead}</span>}
               <span className="figure-stack conversion__figure">
-                {isContinuous(item.id) ? (
-                  <LiveMeasure
-                    remainingSeconds={remaining}
-                    unitSeconds={UNIT_SECONDS[item.id]}
-                    unit={item.unit}
-                    approximate={item.approximate}
-                  />
+                {item.id === "heartbeats" ? (
+                  <LiveHeartbeats unit={item.unit} />
                 ) : (
                   <PairNumber
                     value={conversions[item.id]}
