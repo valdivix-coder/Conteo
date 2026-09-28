@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNowSecond } from "../hooks/useChileTime";
 import { UNIT_SECONDS, computeConversions, type Conversions } from "../lib/conversions";
-import { formatPair, liveDecimals, splitFixed } from "../lib/numberFormat";
+import { formatPair } from "../lib/numberFormat";
 import { countCalendarDays, remainingSeconds } from "../lib/time";
+import { LiveMeasure } from "./LiveMeasure";
 import { PairNumber } from "./PairNumber";
 
 interface Item {
@@ -31,15 +32,7 @@ const ITEMS: readonly Item[] = [
   { id: "juCookies", unit: "galletas de la Ju", note: "En su versión motivada. Del horno directo a la mesa." }
 ];
 
-/** Continuous units get enough decimals for the last digit to tick about once per second. */
-function decimalsFor(id: keyof Conversions): number {
-  return id in UNIT_SECONDS ? liveDecimals(UNIT_SECONDS[id as keyof typeof UNIT_SECONDS]) : 0;
-}
-
-const DECIMALS = Object.fromEntries(ITEMS.map((item) => [item.id, decimalsFor(item.id)])) as Record<
-  keyof Conversions,
-  number
->;
+const isContinuous = (id: keyof Conversions): id is keyof typeof UNIT_SECONDS => id in UNIT_SECONDS;
 
 interface FunConversionsProps {
   dayKey: string;
@@ -48,8 +41,9 @@ interface FunConversionsProps {
 export function FunConversions({ dayKey }: FunConversionsProps) {
   // Recomputed from the exact remaining seconds on every tick: real time, no drift.
   const second = useNowSecond();
+  const remaining = remainingSeconds(second * 1000);
   const calendar = useMemo(() => countCalendarDays(dayKey), [dayKey]);
-  const conversions = computeConversions(remainingSeconds(second * 1000), calendar);
+  const conversions = computeConversions(remaining, calendar);
 
   const trackRef = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
@@ -119,18 +113,25 @@ export function FunConversions({ dayKey }: FunConversionsProps) {
 
       <ul ref={trackRef} className="conversions__track" tabIndex={0} aria-label="Equivalencias del tiempo restante">
         {ITEMS.map((item) => {
-          const { integer, fraction } = splitFixed(conversions[item.id], DECIMALS[item.id]);
           return (
             <li key={item.id} className="conversion">
               {item.lead && <span className="conversion__lead">{item.lead}</span>}
               <span className="figure-stack conversion__figure">
-                <PairNumber
-                  value={integer}
-                  fraction={fraction}
-                  unit={item.unit}
-                  approximate={item.approximate}
-                  className="conversion__number"
-                />
+                {isContinuous(item.id) ? (
+                  <LiveMeasure
+                    remainingSeconds={remaining}
+                    unitSeconds={UNIT_SECONDS[item.id]}
+                    unit={item.unit}
+                    approximate={item.approximate}
+                  />
+                ) : (
+                  <PairNumber
+                    value={conversions[item.id]}
+                    unit={item.unit}
+                    approximate={item.approximate}
+                    className="conversion__number"
+                  />
+                )}
                 <span className="figure-label conversion__unit" aria-hidden="true">
                   {item.unit}
                 </span>

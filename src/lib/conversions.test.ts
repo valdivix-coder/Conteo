@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { UNIT_SECONDS, computeConversions } from "./conversions";
-import { liveDecimals, splitFixed } from "./numberFormat";
+import { stepDecimals } from "./numberFormat";
 import { chileDateTime, computeTotals, countCalendarDays } from "./time";
 
 const FULL_JOURNEY_START = chileDateTime("2026-09-26T00:00:00").toMillis();
@@ -49,17 +49,20 @@ describe("conversions", () => {
     expect(partial.juCookies).toBeCloseTo(2, 10);
   });
 
-  it("changes every second for every continuous unit", () => {
-    const now = computeConversions(FULL_JOURNEY_SECONDS, calendar);
-    const next = computeConversions(FULL_JOURNEY_SECONDS - 1, calendar);
+  it("steps the last digit by exactly one, never skipping, with at most two decimals", () => {
     for (const id of Object.keys(UNIT_SECONDS) as (keyof typeof UNIT_SECONDS)[]) {
-      const decimals = liveDecimals(UNIT_SECONDS[id]);
-      const a = splitFixed(now[id], decimals);
-      const b = splitFixed(next[id], decimals);
-      // Over a few seconds the visible digits must move (the last digit ticks ~1/s).
-      const later = splitFixed(computeConversions(FULL_JOURNEY_SECONDS - 3, calendar)[id], decimals);
-      expect(`${later.integer},${later.fraction}`).not.toBe(`${a.integer},${a.fraction}`);
-      expect(`${b.integer},${b.fraction}` <= `${a.integer},${a.fraction}` || b.integer < a.integer).toBe(true);
+      const unit = UNIT_SECONDS[id];
+      const refresh = unit < 1 ? 0.2 : 1;
+      const decimals = stepDecimals(unit, refresh);
+      expect(decimals).toBeLessThanOrEqual(2);
+      const scale = 10 ** decimals;
+      let previous = Math.floor((FULL_JOURNEY_SECONDS / unit) * scale);
+      for (let t = refresh; t < 600; t += refresh) {
+        const current = Math.floor(((FULL_JOURNEY_SECONDS - t) / unit) * scale + 1e-9);
+        expect(previous - current).toBeLessThanOrEqual(1);
+        expect(previous - current).toBeGreaterThanOrEqual(0);
+        previous = current;
+      }
     }
   });
 

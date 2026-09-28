@@ -54,12 +54,18 @@ export function splitFixed(value: number, decimals: number): { integer: number; 
   };
 }
 
+export const MAX_LIVE_DECIMALS = 2;
+
 /**
- * Decimals needed for the last digit of a unit lasting `unitSeconds` to change
- * about once per second while counting down.
+ * Decimals for a live countdown of a unit lasting `unitSeconds`, refreshed
+ * every `refreshSeconds`: as many as possible (up to two) while each step of
+ * the last digit still lasts at least one refresh, so the last digit always
+ * moves by exactly one and never skips.
  */
-export function liveDecimals(unitSeconds: number): number {
-  return unitSeconds <= 1 ? 0 : Math.ceil(Math.log10(unitSeconds));
+export function stepDecimals(unitSeconds: number, refreshSeconds = 1, max = MAX_LIVE_DECIMALS): number {
+  if (!(unitSeconds > 0) || !(refreshSeconds > 0)) return 0;
+  const fits = Math.floor(Math.log10(unitSeconds / refreshSeconds) + 1e-9);
+  return Math.min(max, Math.max(0, fits));
 }
 
 /** Rounds to a number of significant digits: 221280 → 220000, 15.63 → 16. */
