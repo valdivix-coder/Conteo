@@ -528,6 +528,14 @@ button {
   font-weight: 400;
 }
 
+.pair-number__fraction {
+  align-self: baseline;
+  font-size: 0.42em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--color-text-muted);
+}
+
 .pair-number--approx {
   padding-inline: 0.44em;
 }

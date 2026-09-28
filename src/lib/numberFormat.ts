@@ -37,6 +37,31 @@ export function formatGrouped(value: number): string {
   return toDisplayGroups(value).join(GROUP_SEPARATOR);
 }
 
+export const DECIMAL_SEPARATOR = ",";
+
+/**
+ * Truncates (never rounds up) to a fixed number of decimals, so a value that
+ * is counting down never appears to jump back up: 15.49218379 → { 15, "4921837" }.
+ */
+export function splitFixed(value: number, decimals: number): { integer: number; fraction: string } {
+  const safe = Number.isFinite(value) && value > 0 ? value : 0;
+  if (decimals <= 0) return { integer: Math.floor(safe), fraction: "" };
+  const scale = 10 ** decimals;
+  const scaled = Math.floor(safe * scale + 1e-9);
+  return {
+    integer: Math.floor(scaled / scale),
+    fraction: String(scaled % scale).padStart(decimals, "0")
+  };
+}
+
+/**
+ * Decimals needed for the last digit of a unit lasting `unitSeconds` to change
+ * about once per second while counting down.
+ */
+export function liveDecimals(unitSeconds: number): number {
+  return unitSeconds <= 1 ? 0 : Math.ceil(Math.log10(unitSeconds));
+}
+
 /** Rounds to a number of significant digits: 221280 → 220000, 15.63 → 16. */
 export function roundSignificant(value: number, significantDigits = 2): number {
   const n = Math.max(0, value);

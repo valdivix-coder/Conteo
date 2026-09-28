@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatApproximate, formatPair, formatGrouped, formatPercent, roundSignificant, toDisplayGroups } from "./numberFormat";
+import { formatApproximate, liveDecimals, splitFixed, formatPair, formatGrouped, formatPercent, roundSignificant, toDisplayGroups } from "./numberFormat";
 
 describe("formatPair", () => {
   it.each([
@@ -61,6 +61,22 @@ describe("formatApproximate", () => {
   it("handles zero", () => {
     expect(formatApproximate(0).display).toBe("≈ 00");
     expect(roundSignificant(0)).toBe(0);
+  });
+});
+
+describe("live decimals", () => {
+  it("truncates instead of rounding so countdowns never tick up", () => {
+    expect(splitFixed(15.49218379, 7)).toEqual({ integer: 15, fraction: "4921837" });
+    expect(splitFixed(2.99999, 2)).toEqual({ integer: 2, fraction: "99" });
+    expect(splitFixed(-3, 2)).toEqual({ integer: 0, fraction: "00" });
+    expect(splitFixed(42.9, 0)).toEqual({ integer: 42, fraction: "" });
+  });
+
+  it("picks decimals so the last digit moves about once per second", () => {
+    expect(liveDecimals(0.857)).toBe(0); // heartbeat
+    expect(liveDecimals(180)).toBe(3); // song
+    expect(liveDecimals(7200)).toBe(4); // nap
+    expect(liveDecimals(29.53059 * 86400)).toBe(7); // moon
   });
 });
 
